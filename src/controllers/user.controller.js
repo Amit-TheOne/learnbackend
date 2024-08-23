@@ -242,7 +242,7 @@ const changeCurerentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
-    .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
+    .json(new ApiResponse(200, req.user, "User fetched successfully"));
 });
 
 
@@ -276,13 +276,15 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
-  const localAvatarPath = req.file?.path
+  const avatarLocalPath = req.file?.path
 
-  if (!localAvatarPath) {
+  if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is missing");
   }
 
-  const avatar = await uploadOnCloudinary(localAvatarPath)
+  //TODO: delete old image 
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath)
 
   if (!avatar.url) {
     throw new ApiError(400, "Error while uploading on avatar");
@@ -312,13 +314,15 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 });
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
-  const localCoverImagePath = req.file?.path
+  const coverImageLocalPath = req.file?.path
 
-  if (!localCoverImagePath) {
+  if (!coverImageLocalPath) {
     throw new ApiError(400, "Cover Image file is missing");
   }
 
-  const coverImage = await uploadOnCloudinary(localCoverImagePath)
+  //TODO: delete old image 
+
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
   if (!coverImage.url) {
     throw new ApiError(400, "Error while uploading on cover image");
