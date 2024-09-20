@@ -156,11 +156,11 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: {
-        refreshToken: undefined
+      $unset: {
+        refreshToken: 1
       }
     },
     {
@@ -200,7 +200,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Refresh token is expired or used");
   }
 
-  const { accessToken, newRefreshToken } = await generateAccessAndRefreshToken(user._id)
+  const { accessToken, refreshToken: newRefreshToken } = await generateAccessAndRefreshToken(user._id)
 
   const options = {
     httpOnly: true,
@@ -264,7 +264,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     {
       new: true
     }
-  ).select("-password")
+  ).select("-password -refreshToken")
 
   return res
     .status(200)
@@ -300,7 +300,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     {
       new: true
     }
-  ).select("-password")
+  ).select("-password -refreshToken")
 
   return res
     .status(200)
@@ -338,7 +338,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     {
       new: true
     }
-  ).select("-password")
+  ).select("-password -refreshToken")
 
   return res
     .status(200)
